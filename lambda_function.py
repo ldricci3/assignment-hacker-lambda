@@ -2,6 +2,8 @@ import logging
 import pymysql
 import sys
 import rds_config
+from datetime import datetime
+import dateutil.parser
 
 import ask_sdk_core.utils as ask_utils
 
@@ -94,16 +96,64 @@ class PrioritizeIntentHandler(AbstractRequestHandler):
         return ask_utils.is_intent_name("PrioritizeIntent")(handler_input)
 
     def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
+        # type: (HandlerInput) -> Response   
+        
+        #grab all the assignments for a student from the database
+        with conn.cursor(pymysql.cursors.DictCursor) as cur:
+            cur.execute('')
+            assignments = cur.fetchall()
 
-        #get all assignments for this week, return one with highest priority
-        current_assignment = None
+        #if there are no assignments, exit
+        if not assignments:
+            speak_output = "You have no current assignments"
+            return (
+                handler_input.response_builder
+                    .speak(speak_output)
+                    .response
+            )
+
+        #get the values of the slots if they were used
+        slots = handler_input.request_envelope.request.intent.slots
+        assignmentType = slots['assignment']
+        if assignmentType:
+            assignmentType = assignmentType['value']
+        date = slots['date']
+        if date:
+            date = date['value']
+        numAssignments = slots['numberOfAssignments']
+        if numAssignments:
+            numAssignments = numAssignments['value']
+
+        #calculate the weight for each assignment, and package it with the assignment in a tuple
+        weighted = []
         for assignment in assignments:
-            if current_assignment.weight < assignment.weight:
-                current_assignment = assignment
-        speak_output = "you should work on " + current_assignment
+            f = '%Y-%m-%d'
+            date = datetime.strptime(assignment['due_date'], f)
+            total_weight = (assignment['credits'] * assignment['weight']) / (date - datetime.now())
+            weighted.append((assignment, total_weight))
 
+        #sort the assignments based on their weight
+        weighted = weighted.sort(key=lambda x: x[1]).reverse()
 
+        #filter all assignments by assignment type
+        if (not assignmentType == None and not assignmentType == "assignment"):
+            weighted = list(filter(lambda x: x[1]['category'].equals(assignmentType), weighted))
+        
+        #based on what slots were used, create a response
+        speak_output = "you should work on "
+        if (not date == None): #filter all the assignments before a certain date, return the first one
+            f = '%Y-%m-%d'
+            yourdate = dateutil.parser.parse(date)
+            weighted = list(filter(lambda x: datetime.strptime(x[0].due_date, f) < yourdate))
+        elif (not numAssignments == None):  #list the first x most imporant assignments
+            weighted = weighted[0:numAssignments]
+            for ass in weighted:
+                speak_output += f"your {ass['nick_name']} {ass['category']} due on {ass['due_date']}, "
+            
+            speak_output = speak_output[0:len(speak_output) - 3]
+        else:   #pick out the most important assignment
+            ass = weighted[0]
+            speak_output += f"your {ass['nick_name']} {ass['category']} due on {ass['due_date']}"
 
         return (
             handler_input.response_builder
