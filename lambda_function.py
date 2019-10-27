@@ -114,6 +114,26 @@ class addAssignmentIntent(AbstractRequestHandler):
                 .response
         )
 
+class removeAssignmentIntent(AbstractRequestHandler):
+    """Handler for Get Assignments Intent"""
+    def can_handle(self, handler_input):
+        # type (HandlerInput) -> bool
+        return ask_utils.is_intent_name("removeAssignmentIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+
+        #remove assignment and remove from database
+        speak_output = "assignment removed from calendar"
+
+
+
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                .response
+        )
+
 
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
