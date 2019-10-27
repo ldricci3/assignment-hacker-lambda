@@ -49,11 +49,11 @@ class LaunchRequestHandler(AbstractRequestHandler):
                 .response
         )
 
-class GetAssignmentsIntentHandler(AbstractRequestHandler):
+class AgendaIntent(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
-        return ask_utils.is_intent_name("getAssignmentsIntent")(handler_input)
+        return ask_utils.is_intent_name("AgendaIntent")(handler_input)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
@@ -75,11 +75,11 @@ class GetAssignmentsIntentHandler(AbstractRequestHandler):
                 .response
         )
 
-class chooseFocusIntent(AbstractRequestHandler):
+class PrioritizeIntent(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
-        return ask_utils.is_intent_name("chooseFocusIntent")(handler_input)
+        return ask_utils.is_intent_name("PrioritizeIntent")(handler_input)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
@@ -99,11 +99,11 @@ class chooseFocusIntent(AbstractRequestHandler):
                 .response
         )
 
-class addAssignmentIntent(AbstractRequestHandler):
+class AdditionIntent(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
-        return ask_utils.is_intent_name("addAssignmentIntent")(handler_input)
+        return ask_utils.is_intent_name("AdditionIntent")(handler_input)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
@@ -119,11 +119,11 @@ class addAssignmentIntent(AbstractRequestHandler):
                 .response
         )
 
-class removeAssignmentIntent(AbstractRequestHandler):
+class CompletionIntent(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
-        return ask_utils.is_intent_name("removeAssignmentIntent")(handler_input)
+        return ask_utils.is_intent_name("CompletionIntent")(handler_input)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
