@@ -49,7 +49,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
                 .response
         )
 
-class getAssignmentsIntentHandler(AbstractRequestHandler):
+class GetAssignmentsIntentHandler(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
@@ -60,9 +60,14 @@ class getAssignmentsIntentHandler(AbstractRequestHandler):
 
         #get list of assignments within a week from that time given student id
         #query into assignments array
-        speak_output = "Here are the assignments due in the next week."
-        for assignment in assignments:
-            speak_output = speak_output + "(assignment) due (date)"
+        # speak_output = "Here are the assignments due in the next week."
+        # for assignment in assignments:
+        #     speak_output = speak_output + "(assignment) due (date)"
+
+        with conn.cursor() as cur:
+            cur.execute("select * from STUDENTS")
+
+        speak_output = "My name is " + cur.fetchone()[1] + ". I am the sarge."
 
         return (
             handler_input.response_builder
