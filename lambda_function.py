@@ -61,7 +61,13 @@ class chooseFocusIntent(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "You should work on x"
+        #speak_output = "You should work on x"
+        #get all assignments for this week, return one with highest priority
+        current_assignment = None
+        for assignment in assignments:
+            if current_assignment.weight < assignment.weight:
+                current_assignment = assignment
+        speak_output = "you should work on " + current_assignment
 
 
 
