@@ -38,12 +38,9 @@ class LaunchRequestHandler(AbstractRequestHandler):
         amazon_id = handler_input.request_envelope.session.user.user_id
 
         with conn.cursor() as cur:
-            return ask_utils.is_request_type("LaunchRequest")(handler_input) \
-                and cur.execute(f"""
-                                SELECT * 
-                                FROM students
-                                WHERE amazon_id={amazon_id}
-                                """)
+            found = cur.execute(f"SELECT * FROM STUDENTS WHERE amazon_id=\"{amazon_id}\"")
+
+        return ask_utils.is_request_type("LaunchRequest")(handler_input) and found > 0
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
