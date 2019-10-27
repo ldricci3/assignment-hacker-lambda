@@ -56,11 +56,11 @@ class LaunchRequestHandler(AbstractRequestHandler):
                 .response
         )
 
-class GetAssignmentsIntentHandler(AbstractRequestHandler):
+class AgendaIntentHandler(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
-        return ask_utils.is_intent_name("getAssignmentsIntent")(handler_input)
+        return ask_utils.is_intent_name("AgendaIntent")(handler_input)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
@@ -71,10 +71,15 @@ class GetAssignmentsIntentHandler(AbstractRequestHandler):
         # for assignment in assignments:
         #     speak_output = speak_output + "(assignment) due (date)"
 
-        with conn.cursor() as cur:
-            cur.execute("select * from STUDENTS")
+        #with conn.cursor() as cur:
+            #cur.execute("select * from STUDENTS")
 
-        speak_output = "My name is " + cur.fetchone()[1] + ". I am the sarge."
+        #speak_output = "My name is " + cur.fetchone()[1] + ". I am the sarge."
+
+        with conn.cursor() as cur:
+            cur.execute("select * from ASSIGNMENTS")
+
+        speak_output = "test!!" + cur.fetchone()[1]
 
         return (
             handler_input.response_builder
@@ -82,11 +87,11 @@ class GetAssignmentsIntentHandler(AbstractRequestHandler):
                 .response
         )
 
-class chooseFocusIntent(AbstractRequestHandler):
+class PrioritizeIntentHandler(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
-        return ask_utils.is_intent_name("chooseFocusIntent")(handler_input)
+        return ask_utils.is_intent_name("PrioritizeIntent")(handler_input)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
@@ -106,11 +111,11 @@ class chooseFocusIntent(AbstractRequestHandler):
                 .response
         )
 
-class addAssignmentIntent(AbstractRequestHandler):
+class AdditionIntentHandler(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
-        return ask_utils.is_intent_name("addAssignmentIntent")(handler_input)
+        return ask_utils.is_intent_name("AdditionIntent")(handler_input)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
@@ -126,11 +131,11 @@ class addAssignmentIntent(AbstractRequestHandler):
                 .response
         )
 
-class removeAssignmentIntent(AbstractRequestHandler):
+class CompletionIntentHandler(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
-        return ask_utils.is_intent_name("removeAssignmentIntent")(handler_input)
+        return ask_utils.is_intent_name("CompletionIntent")(handler_input)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
@@ -246,7 +251,10 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
 sb = SkillBuilder()
 
 sb.add_request_handler(LaunchRequestHandler())
-sb.add_request_handler(GetAssignmentsIntentHandler())
+sb.add_request_handler(AgendaIntentHandler())
+sb.add_request_handler(PrioritizeIntentHandler())
+sb.add_request_handler(CompletionIntentHandler())
+sb.add_request_handler(AdditionIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
