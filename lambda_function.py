@@ -49,7 +49,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
                 .response
         )
 
-class AgendaIntent(AbstractRequestHandler):
+class AgendaIntentHandler(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
@@ -75,7 +75,7 @@ class AgendaIntent(AbstractRequestHandler):
                 .response
         )
 
-class PrioritizeIntent(AbstractRequestHandler):
+class PrioritizeIntentHandler(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
@@ -99,7 +99,7 @@ class PrioritizeIntent(AbstractRequestHandler):
                 .response
         )
 
-class AdditionIntent(AbstractRequestHandler):
+class AdditionIntentHandler(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
@@ -119,7 +119,7 @@ class AdditionIntent(AbstractRequestHandler):
                 .response
         )
 
-class CompletionIntent(AbstractRequestHandler):
+class CompletionIntentHandler(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
@@ -239,7 +239,10 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
 sb = SkillBuilder()
 
 sb.add_request_handler(LaunchRequestHandler())
-sb.add_request_handler(GetAssignmentsIntentHandler())
+sb.add_request_handler(AgendaIntentHandler())
+sb.add_request_handler(PrioritizeIntentHandler())
+sb.add_request_handler(CompletionIntentHandler())
+sb.add_request_handler(AdditionIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
