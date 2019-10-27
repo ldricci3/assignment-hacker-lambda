@@ -32,15 +32,38 @@ class LaunchRequestHandler(AbstractRequestHandler):
                 .response
         )
 
-class GetAssignmentsIntentHandler(AbstractRequestHandler):
+class getAssignmentsIntentHandler(AbstractRequestHandler):
     """Handler for Get Assignments Intent"""
     def can_handle(self, handler_input):
         # type (HandlerInput) -> bool
         return ask_utils.is_intent_name("getAssignmentsIntent")(handler_input)
-    
+
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "You have x assignments next week"
+
+        #get list of assignments within a week from that time given student id
+        #query into assignments array
+        speak_output = "Here are the assignments due in the next week."
+        for assignment in assignments:
+            speak_output = speak_output + "(assignment) due (date)"
+
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                .response
+        )
+
+class chooseFocusIntent(AbstractRequestHandler):
+    """Handler for Get Assignments Intent"""
+    def can_handle(self, handler_input):
+        # type (HandlerInput) -> bool
+        return ask_utils.is_intent_name("chooseFocusIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        speak_output = "You should work on x"
+
+
 
         return (
             handler_input.response_builder
