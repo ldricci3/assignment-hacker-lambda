@@ -47,7 +47,24 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "Welcome, you can ask me for information or for help. Which would you like to try?"
+        speak_output = "It's not the first time!"
+
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                .ask(speak_output)
+                .response
+        )
+
+class FirstLaunchRequestHandler(AbstractRequestHandler):
+    """Handler for Skill Launch."""
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_request_type("LaunchRequest")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        speak_output = "It's your first time!"
 
         return (
             handler_input.response_builder
@@ -251,6 +268,7 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
 sb = SkillBuilder()
 
 sb.add_request_handler(LaunchRequestHandler())
+sb.add_request_handler(FirstLaunchRequestHandler())
 sb.add_request_handler(AgendaIntentHandler())
 sb.add_request_handler(PrioritizeIntentHandler())
 sb.add_request_handler(CompletionIntentHandler())
