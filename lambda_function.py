@@ -61,13 +61,33 @@ class chooseFocusIntent(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        #speak_output = "You should work on x"
+
         #get all assignments for this week, return one with highest priority
         current_assignment = None
         for assignment in assignments:
             if current_assignment.weight < assignment.weight:
                 current_assignment = assignment
         speak_output = "you should work on " + current_assignment
+
+
+
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                .response
+        )
+
+class addAssignmentIntent(AbstractRequestHandler):
+    """Handler for Get Assignments Intent"""
+    def can_handle(self, handler_input):
+        # type (HandlerInput) -> bool
+        return ask_utils.is_intent_name("addAssignmentIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+
+        #create new assignment and put into database
+        speak_output = "assignment added to calendar"
 
 
 
