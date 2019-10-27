@@ -35,8 +35,15 @@ class LaunchRequestHandler(AbstractRequestHandler):
     """Handler for Skill Launch."""
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
+        amazon_id = handler_input.request_envelope.session.user.user_id
 
-        return ask_utils.is_request_type("LaunchRequest")(handler_input)
+        with conn.cursor() as cur:
+            return ask_utils.is_request_type("LaunchRequest")(handler_input) \
+                and cur.execute(f"""
+                                SELECT * 
+                                FROM students
+                                WHERE amazon_id={amazon_id}
+                                """)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
