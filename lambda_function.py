@@ -90,6 +90,11 @@ class AgendaIntentHandler(AbstractRequestHandler):
 
         #speak_output = "My name is " + cur.fetchone()[1] + ". I am the sarge."
 
+        assignment_type = get_slot_value(
+            handler_input=handler_input, slot_name="assignment")
+        date = get_slot_value(
+            handler_input=handler_input, slot_name="date")
+
         with conn.cursor() as cur:
             cur.execute("select * from ASSIGNMENTS")
 
@@ -109,6 +114,7 @@ class PrioritizeIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
+
 
         #get all assignments for this week, return one with highest priority
         current_assignment = None
