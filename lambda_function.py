@@ -64,10 +64,15 @@ class AgendaIntent(AbstractRequestHandler):
         # for assignment in assignments:
         #     speak_output = speak_output + "(assignment) due (date)"
 
-        with conn.cursor() as cur:
-            cur.execute("select * from STUDENTS")
+        #with conn.cursor() as cur:
+            #cur.execute("select * from STUDENTS")
 
-        speak_output = "My name is " + cur.fetchone()[1] + ". I am the sarge."
+        #speak_output = "My name is " + cur.fetchone()[1] + ". I am the sarge."
+
+        with conn.cursor() as cur:
+            cur.execute("select * from ASSIGNMENTS")
+
+        speak_output = "test!!" + cur.fetchone()[1]
 
         return (
             handler_input.response_builder
