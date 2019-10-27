@@ -40,16 +40,30 @@ class LaunchRequestHandler(AbstractRequestHandler):
         amazon_id = handler_input.request_envelope.session.user.user_id
 
         with conn.cursor() as cur:
-            return ask_utils.is_request_type("LaunchRequest")(handler_input) \
-                and cur.execute(f"""
-                                SELECT * 
-                                FROM students
-                                WHERE amazon_id={amazon_id}
-                                """)
+            found = cur.execute(f"SELECT * FROM STUDENTS WHERE amazon_id=\"{amazon_id}\"")
+
+        return ask_utils.is_request_type("LaunchRequest")(handler_input) and found > 0
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "Welcome, you can ask me for information or for help. Which would you like to try?"
+        speak_output = "It's not the first time!"
+
+        return (
+            handler_input.response_builder
+                .speak(speak_output)
+                .ask(speak_output)
+                .response
+        )
+
+class FirstLaunchRequestHandler(AbstractRequestHandler):
+    """Handler for Skill Launch."""
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_request_type("LaunchRequest")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        speak_output = "It's your first time!"
 
         return (
             handler_input.response_builder
@@ -78,6 +92,11 @@ class AgendaIntentHandler(AbstractRequestHandler):
 
         #speak_output = "My name is " + cur.fetchone()[1] + ". I am the sarge."
 
+        assignment_type = get_slot_value(
+            handler_input=handler_input, slot_name="assignment")
+        date = get_slot_value(
+            handler_input=handler_input, slot_name="date")
+
         with conn.cursor() as cur:
             cur.execute("select * from ASSIGNMENTS")
 
@@ -96,6 +115,7 @@ class PrioritizeIntentHandler(AbstractRequestHandler):
         return ask_utils.is_intent_name("PrioritizeIntent")(handler_input)
 
     def handle(self, handler_input):
+<<<<<<< HEAD
         # type: (HandlerInput) -> Response   
         
         #grab all the assignments for a student from the database
@@ -126,6 +146,13 @@ class PrioritizeIntentHandler(AbstractRequestHandler):
 
         #calculate the weight for each assignment, and package it with the assignment in a tuple
         weighted = []
+=======
+        # type: (HandlerInput) -> Response
+
+
+        #get all assignments for this week, return one with highest priority
+        current_assignment = None
+>>>>>>> 9607bf960812f3c1f8b7fd9fab2fd113df067272
         for assignment in assignments:
             f = '%Y-%m-%d'
             date = datetime.strptime(assignment['due_date'], f)
@@ -301,6 +328,7 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
 sb = SkillBuilder()
 
 sb.add_request_handler(LaunchRequestHandler())
+sb.add_request_handler(FirstLaunchRequestHandler())
 sb.add_request_handler(AgendaIntentHandler())
 sb.add_request_handler(PrioritizeIntentHandler())
 sb.add_request_handler(CompletionIntentHandler())
