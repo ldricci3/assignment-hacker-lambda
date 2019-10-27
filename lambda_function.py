@@ -1,4 +1,8 @@
 import logging
+import pymysql
+import sys
+import rds_config
+
 import ask_sdk_core.utils as ask_utils
 
 from ask_sdk_core.skill_builder import SkillBuilder
@@ -8,12 +12,25 @@ from ask_sdk_core.handler_input import HandlerInput
 
 from ask_sdk_model import Response
 
+# Init Logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+# Init Database MySQL connection
+rds_host  = rds_config.db_endpoint
+name = rds_config.db_username
+password = rds_config.db_password
+db_name = rds_config.db_name
+port = 3306
+
+try:
+    conn = pymysql.connect(rds_host, user=name,
+                           passwd=password, db=db_name, connect_timeout=5)
+except:
+    logger.error("ERROR: Unexpected error: Could not connect to MySql instance.")
+    sys.exit()
+
 # ========================================
-
-
 class LaunchRequestHandler(AbstractRequestHandler):
     """Handler for Skill Launch."""
     def can_handle(self, handler_input):
